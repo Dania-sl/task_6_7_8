@@ -12,7 +12,7 @@ namespace task_7
         thunderstorm,
         snow,
         fog,
-        sunly,
+        sunny,
         darkly
     }
     static class StaticValue
@@ -41,18 +41,21 @@ namespace task_7
 
     class WeatherDays
     {
-        private readonly WeatherParametersDay[] WeatherArray;
+        private WeatherParametersDay[] WeatherArray { get; }
 
         public WeatherDays(WeatherParametersDay[] WeatherArray) => this.WeatherArray = WeatherArray;
         private int CountDays(params WeatherType[] weatherType)
         {
             int daysInMonth = 0;
             foreach (WeatherParametersDay day in WeatherArray)
-                daysInMonth += weatherType.Contains(day.WeatherType) ? 1 : 0;
+                if (weatherType.Contains(day.WeatherType))
+                {
+                    daysInMonth += 1;
+                }   
 
             return daysInMonth;
         }
-        public int CountSunnyDays() => CountDays(WeatherType.sunly);
+        public int CountSunnyDays() => CountDays(WeatherType.sunny);
         public int CountNoRainDays() => CountDays(WeatherType.snow, WeatherType.rain, WeatherType.short_rain);
 
 
@@ -72,6 +75,17 @@ namespace task_7
 
     class Program
     {
+        private static void PrintArray(int[,] daysConsoleArray)
+        {
+            for (int i = 0; i < daysConsoleArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < daysConsoleArray.GetLength(1); j++)
+                {
+                    Console.Write(daysConsoleArray[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
         private static string[] LineArray()
         {
             string[] line = Console.ReadLine().Split(' ');
@@ -82,11 +96,9 @@ namespace task_7
             }
             return line;
         }
-        private static int[,] ReadingFromFile()
+        private static int[,] ReadingFromFile( ref int[,] daysFileArray)
         {
             string[] lines = File.ReadAllLines(StaticValue.path);
-            
-            int[,] daysFileArray = new int[lines.Length, lines[0].Split(' ').Length];
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].Split(' ').Length != 31)
@@ -101,16 +113,15 @@ namespace task_7
                     Console.WriteLine("Wrong value in file!");
                     Environment.Exit(0);
                     }
-            
             }
+            PrintArray(daysFileArray);
             return ChekTypeWeatherArray(daysFileArray);
         }
-        private static int[,] ReadingFromConsole()
+        private static int[,] ReadingFromConsole( ref int[,] daysConsoleArray)
         {
-            int[,] daysConsoleArray = new int[5, StaticValue.monthDay];
             for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine($"Entet {i+1} line");
+                Console.WriteLine($"Entet line {i + 1}");
                 string[] tempArray = LineArray();
                 for (int j = 0; j < tempArray.Length; j++)
                     while (!int.TryParse(tempArray[j], out daysConsoleArray[i, j]))
@@ -118,18 +129,11 @@ namespace task_7
                         Console.WriteLine("You enter wrong value!");
                     }
             }
-            for (int i = 0; i < daysConsoleArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < daysConsoleArray.GetLength(1); j++)
-                {
-                    Console.Write(daysConsoleArray[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
+            PrintArray(daysConsoleArray);
             return ChekTypeWeatherArray(daysConsoleArray);
         }
 
-        private static int[,] ChekTypeWeatherArray(int[,] daysArray)
+        private static int[,] ChekTypeWeatherArray( int[,] daysArray)
         {
             for (int i = 0; i < daysArray.GetLength(1); i++)
             {
@@ -152,11 +156,11 @@ namespace task_7
             Console.WriteLine("");
             if (key == ConsoleKey.K)
             {
-               daysArray = ReadingFromConsole();
+               ReadingFromConsole(ref daysArray);
             }
             if (key == ConsoleKey.F)
             {
-                daysArray = ReadingFromFile();
+                ReadingFromFile(ref daysArray);
             }
             if (key != ConsoleKey.F && key != ConsoleKey.K)
             {
@@ -165,20 +169,11 @@ namespace task_7
             }
 
 
-            for (int i = 0; i < daysArray.GetLength(0); i++)
-            {
-                for (int j = 0; j < daysArray.GetLength(1); j++)
-                {
-                    Console.Write(daysArray[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
-
             WeatherParametersDay[] weatherParametersDays = new WeatherParametersDay[daysArray.GetLength(1)];
             for (int i = 0; i < daysArray.GetLength(1); i++)
                 weatherParametersDays[i] = new WeatherParametersDay(daysArray[0, i],daysArray[1, i],daysArray[2, i], daysArray[3, i], (int)daysArray[4, i]);
             WeatherDays weatherDays = new WeatherDays(weatherParametersDays);
-            Console.WriteLine($"\nNumber of clear days: {weatherDays.CountSunnyDays()}\nThe number of days when there was precipitation: {weatherDays.CountNoRainDays()}");
+            Console.WriteLine($"\nNumber of sunny days: {weatherDays.CountSunnyDays()}\nThe number of days when there was precipitation: {weatherDays.CountNoRainDays()}");
             Console.WriteLine($"Average daytime temperature: {weatherDays.AverageTemperatuMonthDay()}");
         }
     }
