@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace _8
+namespace task_8
 {
     class MyComplex
     {
@@ -12,78 +12,94 @@ namespace _8
             im = initIm;
         }
 
-        public string this[string key]
+        public double this[string type]
         {
             get
             {
-                switch (key)
+                if (type == "realValue")
                 {
-                    case "realValue": return re.ToString();
-                    case "imaginaryValue": return im + "i";
-                    default: return null;
+                    return re;
                 }
+                else {return im;}
             }
         }
 
         public static MyComplex operator +(MyComplex a, MyComplex b)
         {
-            return new MyComplex(a.re + b.re, a.im + b.im);
+            MyComplex res = new MyComplex();
+            res.re = a.re + b.re;
+            res.im = a.im + b.im;
+            return res;
         }
-
         public static MyComplex operator +(MyComplex a, double b)
         {
-            return new MyComplex(a.re + b, a.im);
+            MyComplex res = new MyComplex();
+            res.re = a.re + b;
+            res.im = a.im;
+            return res;
         }
-
-        public static MyComplex operator +(double a, MyComplex b)
+        public static MyComplex operator +(double b, MyComplex a)
         {
-            return new MyComplex(a + b.re, b.im);
+            MyComplex res = new MyComplex();
+            res.re = a.re + b;
+            res.im = a.im;
+            return res;
         }
-
         public static MyComplex operator -(MyComplex a)
         {
-            return new MyComplex(-a.re, -a.im);
+            MyComplex res = new MyComplex();
+            res.re = -a.re;
+            res.im = -a.im;
+            return res;
         }
-
-        public static MyComplex operator -(MyComplex a, MyComplex B)
+        public static MyComplex operator -(MyComplex a, MyComplex b)
         {
-            return new MyComplex(a.re - B.re, a.im - B.im);
+            MyComplex res = new MyComplex();
+            res.re = a.re - b.re;
+            res.im = a.im - b.im;
+            return res;
+        }
+        public static MyComplex operator -(double b, MyComplex a)
+        {
+            MyComplex res = new MyComplex();
+            res.re = a.re - b;
+            res.im = a.im;
+            return res;
+        }
+        public static MyComplex operator -(MyComplex a, double b)
+        {
+            MyComplex res = new MyComplex();
+            res.re = a.re - b;
+            res.im = a.im;
+            return res;
         }
 
         public void InputFromTerminal()
         {
-            re = TryCatch("реальное");
-            im = TryCatch("мнимое");
+            re = CheckNumber("real");
+            im = CheckNumber("imagine");
         }
 
-        private double TryCatch(string text)
+        private double CheckNumber(string text)
         {
-            while (true)
+            double number;
+            Console.Write($"Enter {text} value: ");
+            String stringNumber = Console.ReadLine();
+            while (!double.TryParse(stringNumber, out number))
             {
-                Console.Write($"Введите {text} число: ");
-                try
-                {
-                    return Convert.ToDouble(Console.ReadLine());
-                }
-                catch (InvalidCastException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                Console.WriteLine("Enter correct value, type int!");
+                stringNumber = Console.ReadLine();
             }
+            return number;
         }
 
         public override string ToString()
         {
-            if (im > 0)
-            {
-                return $"{re}+{im}i";
-            }
-
-            return $"{re}{im}i";
+            return ($"{this.re} + {this.im}i або {this.re} - {this.im}i");
         }
     }
 
-    class Program
+    class Program 
     {
         static void Main(string[] args)
         {
@@ -104,9 +120,8 @@ namespace _8
             Console.WriteLine($"A = {A}, B = {B}, C = {C}, D = {D}");
 
             Console.WriteLine($"Re(A) = {A["realValue"]}, Im(A) = {A["imaginaryValue"]}");
-            Console.WriteLine($"Re(B) = {B["realValue"]}, Im(B) = {B["imaginaryValue"]}");
-            Console.WriteLine($"Re(C) = {C["realValue"]}, Im(C) = {C["imaginaryValue"]}");
-            Console.WriteLine($"Re(D) = {D["realValue"]}, Im(D) = {D["imaginaryValue"]}");
+            
+
         }
     }
 }
