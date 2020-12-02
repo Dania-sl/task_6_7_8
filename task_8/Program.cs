@@ -93,10 +93,8 @@ namespace task_8
             return number;
         }
 
-        public override string ToString()
-        {
-            return ($"{this.re} + {this.im}i або {this.re} - {this.im}i");
-        }
+        public override string ToString() => ($"{this.re} + {this.im}i or {this.re} - {this.im}i");
+        
     }
 
     class Program 
