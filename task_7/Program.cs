@@ -56,7 +56,7 @@ namespace task_7
             return daysInMonth;
         }
         public int CountSunnyDays() => CountDays(WeatherType.sunny);
-        public int CountNoRainDays() => CountDays(WeatherType.snow, WeatherType.rain, WeatherType.short_rain);
+        public int CountNoRainDays() => CountDays(WeatherType.sunny);
 
 
         public double AverageTemperatuMonthDay()

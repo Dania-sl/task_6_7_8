@@ -20,7 +20,11 @@ namespace task_8
                 {
                     return re;
                 }
-                else {return im;}
+                if (type == "imaginaryValue")
+                {
+                    return im;
+                }
+                return 0;
             }
         }
 
@@ -40,10 +44,7 @@ namespace task_8
         }
         public static MyComplex operator +(double b, MyComplex a)
         {
-            MyComplex res = new MyComplex();
-            res.re = a.re + b;
-            res.im = a.im;
-            return res;
+            return a+b;
         }
         public static MyComplex operator -(MyComplex a)
         {
@@ -68,10 +69,8 @@ namespace task_8
         }
         public static MyComplex operator -(MyComplex a, double b)
         {
-            MyComplex res = new MyComplex();
-            res.re = a.re - b;
-            res.im = a.im;
-            return res;
+            
+            return -b+a;
         }
 
         public void InputFromTerminal()
@@ -93,7 +92,14 @@ namespace task_8
             return number;
         }
 
-        public override string ToString() => ($"{this.re} + {this.im}i or {this.re} - {this.im}i");
+        public override string ToString() {
+            if (this.im < 0)
+            {
+                return ($"{this.re} {this.im}i");
+            }
+            else return ($"{this.re} + {this.im}i ");
+            
+                }
         
     }
 
@@ -105,17 +111,19 @@ namespace task_8
             MyComplex B = new MyComplex();
             MyComplex C = new MyComplex(1);
             MyComplex D = new MyComplex();
-
-            C = A + B;
+            D.InputFromTerminal();
+            C = A + D;
+            Console.WriteLine($"C = {C}");
             C = A + 10.5;
+
+            Console.WriteLine($"A = {A}, B = {B}, C = {C}, D = {D}");
             C = 10.5 + A;
             D = -C;
             C = A + B + C + D;
             C = A = B = C;
 
-            D.InputFromTerminal();
+            
 
-            Console.WriteLine($"A = {A}, B = {B}, C = {C}, D = {D}");
 
             Console.WriteLine($"Re(A) = {A["realValue"]}, Im(A) = {A["imaginaryValue"]}");
             
